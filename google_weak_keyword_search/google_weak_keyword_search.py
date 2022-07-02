@@ -22,10 +22,12 @@ Googleの検索エンジンでキーワードを検索
 '''
 
 # '検索キーワードリスト.txt'ファイルを読み込み、リストにする
-# １行ずつ読み込んで改行コードを削除してリストにする
+with open('検索キーワードリスト.txt') as f:
+    keywords = [s.rstrip() for s in f.readlines()]  # １行ずつ読み込んで改行コードを削除してリストにする
 
 # 'ドメインリスト.txt'ファイルを読み込み、リストにする
-# １行ずつ読み込んで改行コードを削除してリストにする
+with open('検索キーワードリスト.txt') as f:
+    domains = [s.rstrip() for s in f.readlines()]  # １行ずつ読み込んで改行コードを削除してリストにする
 
 # seleniumで自動操作するブラウザはGoogleChrome
 # Optionsオブジェクトを作成
@@ -75,11 +77,18 @@ driver.get(URL)
 '''
 
 # 各ページのURLを入れるためのリストを指定
+urls = []
+
 # a要素（各ページの1位から10位までのURL）取得
+objects = driver.find_elements_by_css_selector('div.yuRUbf > a')
+
 # objects = driver.find_elements_by_css_selector('.rc > .r > a')
 
-# 各ページのURLをリストに追加
-# 各ページのURLが取得できなかった場合は警告を出す
+if objects:
+    for object in objects:
+        urls.append(object.get_attribute('href'))  # 各ページのURLをリストに追加
+else:
+    print('URLが取得できませんでした')  # 各ページのURLが取得できなかった場合は警告を出す
 # 各ページのURLを戻り値に指定
 
 '''
