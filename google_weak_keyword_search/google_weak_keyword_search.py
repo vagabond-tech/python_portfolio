@@ -61,14 +61,19 @@ driver.get(URL)
 '''
 
 # 検索テキストボックスの要素をname属性から取得
+input_element = driver.find_element_by_name('q')
 
 # 検索テキストボックスに入力されている文字列を消去
+input_element.clear()
 
 # 検索テキストボックスにキーワードを入力
+input_element.send_keys("転職")
 
 # Enterキーを送信
+input_element.send_keys(Keys.RETURN)
 
 # 2秒待機
+time.sleep(2)
 
 # タイトルにkeywordが含まれていることを確認
 
