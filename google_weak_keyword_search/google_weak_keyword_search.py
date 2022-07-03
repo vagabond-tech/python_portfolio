@@ -34,8 +34,8 @@ options = Options()
 # options.add_argument('--headless')
 
 # ChromeのWebDriverオブジェクトを作成
-driver = webdriver.Chrome(options=options)
-# driver = webdriver.Chrome(options=options, executable_path=r"Windowsのchromedriver.exeを置いたパス")
+# driver = webdriver.Chrome(options=options)
+driver = webdriver.Chrome(options=options, executable_path=r"C:\work\chromedriver.exe")
 
 # Googleのトップページを開く
 driver.get(URL)
@@ -59,14 +59,19 @@ driver.get(URL)
 '''
 
 # 検索テキストボックスの要素をname属性から取得
+input_element = driver.find_element_by_name('q')
 
 # 検索テキストボックスに入力されている文字列を消去
+input_element.clear()
 
 # 検索テキストボックスにキーワードを入力
+input_element.send_keys("転職")
 
 # Enterキーを送信
+input_element.send_keys(Keys.ENTER)
 
 # 2秒待機
+time.sleep(2)
 
 # タイトルにkeywordが含まれていることを確認
 
