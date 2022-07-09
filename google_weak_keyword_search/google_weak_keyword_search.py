@@ -40,10 +40,8 @@ driver = webdriver.Chrome(options=options)
 # driver = webdriver.Chrome(options=options, executable_path=r"Windowsのchromedriver.exeを置いたパス")
 
 # Googleのトップページを開く
-driver.get(URL)
-# 2秒待機（読み込みのため）
-
-# タイトルに'Google'が含まれていることを確認
+driver.get(URL)  # 2秒待機（読み込みのため）
+time.sleep(2)  # タイトルに'Google'が含まれていることを確認
 
 # 検索キーワードを１つずつ取り出す
 # search関数実行
@@ -100,15 +98,18 @@ else:
 URLリストからドメインを取得し、指定ドメインに含まれているかチェック
 '''
 # URLリストから各ページのURLを１つずつ取り出す
-
-# '//〇〇/'に一致する箇所（ドメイン）を抜き出す
-# '//〇〇/'の'〇〇'に一致する箇所を抜き出し、domainに代入
-# ドメインに'www.'が含まれているかチェック
-# 含まれているなら'www.'を除去
-# 各ページのドメインが指定ドメインに含まれているかチェック
-# 含まれているなら警告を出す
-# １つでも含まれているなら他はチェックする必要がないので関数を終了
-# 指定ドメインに含まれていないならキーワードをok_keywordlistに追加
+for url in urls:
+    m = re.search(r'//(.*?)/', url)  # '//〇〇/'に一致する箇所（ドメイン）を抜き出す
+    domain = m.group(1)  # '//〇〇/'の'〇〇'に一致する箇所を抜き出し、domainに代入
+    if 'www.' in domain:  # ドメインに'www.'が含まれているかチェック
+        domain = domain[4:]  # 含まれているなら'www.'を除去
+    if domain in domains:  # 各ページのドメインが指定ドメインに含まれているかチェック
+        # 含まれているなら警告を出す
+        print(f'キーワード「{"転職"}」の検索結果には大手ドメインがありましたので除外します。')
+        break  # １つでも含まれているなら他はチェックする必要がないので関数を終了
+    else:
+        okkeywordlist = []
+        okkeywordlist.append("転職")  # 指定ドメインに含まれていないならキーワードをok_keywordlistに追加
 # ドメインチェック済みのキーワードを戻り値に指定
 
 # main関数を実行
