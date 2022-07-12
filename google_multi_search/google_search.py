@@ -1,22 +1,26 @@
 # ブラウザを自動操作するためseleniumをimport
-
+from selenium import webdriver
 # seleniumでヘッドレスモードを指定するためにimport
-
+from selenium.webdriver.chrome.options import Options
 # seleniumでEnterキーを送信する際に使用するのでimport
-
+from selenium.webdriver.common.keys import Keys
 # HTTPリクエストを送る為にrequestsをimport
-
+import requests
 # HTMLから必要な情報を得る為にBeautifulSoupをimport
-
+from bs4 import BeautifulSoup
 # グーグルスプレッドシートを操作する為にimport
-
+import gspread
 # グーグルスプレッドシートの認証情報設定の為にimport
+from google.oauth2.service_account import Credentials
 
+# コード実行時のワーニング表示を無視
+import warnings
+warnings.simplefilter('ignore')
 
 # グーグルのURL
-
+URL = "https://google.co.jp"
 # グーグルのURLタイトルの確認のため
-
+URL_TITLE = 'Google'
 
 # 2つのAPIを記述しないとリフレッシュトークンを3600秒毎に発行し続けなければならない
 
