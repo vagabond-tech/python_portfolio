@@ -23,13 +23,14 @@ URL = "https://google.co.jp"
 URL_TITLE = 'Google'
 
 # 2つのAPIを記述しないとリフレッシュトークンを3600秒毎に発行し続けなければならない
+scope = ['https://www.googleapis.com/auth/spreadsheets','https://www.googleapis.com/auth/drive']
 
 # 認証情報設定
 # ダウンロードしたjsonファイル名をクレデンシャル変数に設定（秘密鍵、Pythonファイルから読み込みしやすい位置に置く）
-
+credentials = Credentials.from_service_account_file("daitra-spreadsheet-scraping-99fdf49a6028.json", scopes=scope)
 
 # 共有設定したスプレッドシートキーを格納
-
+SPREADSHEET_KEY = '1S-PQHgVlR7U8Rq8n_H8r0IetWr2Mb1k6AuH1oi37ILI'
 
 '''
 メインの処理
@@ -38,20 +39,20 @@ Googleでキーワードを検索
 '''
 
 # 検索キーワードが入力されたテキストファイルを読み込む
-
+with open("keyword.txt") as f:
+    keywords = [s.rstrip() for s in f.readlines()]
 
 # Options()オブジェクトの生成
-
+options = Options()
 # options.add_argument('--headless') # ヘッドレスモードを有効にする
-
+options.add_argument('--headless')
 # ChromeのWebDriverオブジェクトを作成
-
+driver = webdriver.Chrome(options=options)
 # driver = webdriver.Chrome(options=options, executable_path="chromedriverのpathを書く") -> Windowsの場合
 
-# Googleのトップページを開く
+driver.get(URL)  # Googleのトップページを開く
 
-# 2秒待機
-
+time.sleep(2)  # 2秒待機
 
 # Google検索処理
 
