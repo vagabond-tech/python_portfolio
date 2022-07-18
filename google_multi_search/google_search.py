@@ -82,12 +82,35 @@ time.sleep(2)  # 2秒待機
 '''
 
 # 辞書を使って複数のアイテムを整理 -> 引数が減る＋返り値が減る
+items = {
+    'keyword': keyword,
+    'title': ['タイトル'],
+    'url': [],
+    'description': ['説明文'],
+    'h1': [],
+    'h2': [],
+    'h3': [],
+    'h4': [],
+    'h5': []
+}
 
 # seleniumによる検索結果のurlの取得
+urls = driver.find_elements_by_css_selector('div.NJo7tc.Z26q7c.uUuwM.jGGQ5e > div > a')
+if urls:
+    for url in urls:
+        items['url'].append(url.get_attribute('href').strip())
 
 # seleniumによるtitleの取得
+titles = driver.find_elements_by_css_selector('div.NJo7tc.Z26q7c.uUuwM.jGGQ5e > div > a > h3')
+if titles:
+    for title in titles:
+        items['title'].append(title.text.strip())
 
 # seleniumによるdescription（説明文）の取得
+descriptions = driver.find_elements_by_css_selector('div > div:nth-child(2) > div > span')
+if descriptions:
+    for description in descriptions:
+        items['description'].append(description.text.strip())
 
 # h1?h5見出しの取得
 
