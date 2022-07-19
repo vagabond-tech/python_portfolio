@@ -193,15 +193,18 @@ Googleスプレッドシートに情報を出力
 # ②1秒あたり10件まで
 
 # OAuth2の資格情報を使用してGoogleAPIにログイン
+gc = gspread.authorize(credentials)
 
 # シートが作成されているか確認するためのフラグ
-
+flag = False
 # 共有設定したスプレッドシートのシート1を開く
+workbook = gc.open_by_key(SPREADSHEET_KEY)
 
 # ワークシートを作成（タイトルがkeywordで、50行、50列）
+worksheet = Workbook.add_worksheet(title=items['keyword'], rows='50', cols='50')
 
 # シートが作成されたらフラグを立てる
-
+flag = True
 # スプレッドシート書き込み処理
 
 # キーワードの書き込み
