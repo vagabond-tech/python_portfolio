@@ -77,73 +77,110 @@ time.sleep(2)  # 2秒待機
 
 # 2秒待機
 
-'''
-タイトル、URL、説明文、H1からH5までの情報を取得
-'''
+def get_info(keyword, driver):
+    '''
+    タイトル、URL、説明文、H1からH5までの情報を取得
+    '''
 
-# 辞書を使って複数のアイテムを整理 -> 引数が減る＋返り値が減る
-items = {
-    'keyword': keyword,
-    'title': ['タイトル'],
-    'url': [],
-    'description': ['説明文'],
-    'h1': [],
-    'h2': [],
-    'h3': [],
-    'h4': [],
-    'h5': []
-}
+    # 辞書を使って複数のアイテムを整理 -> 引数が減る＋返り値が減る
+    items = {
+        'keyword': keyword,
+        'title': ['タイトル'],
+        'url': [],
+        'description': ['説明文'],
+        'h1': [],
+        'h2': [],
+        'h3': [],
+        'h4': [],
+        'h5': []
+    }
 
-# seleniumによる検索結果のurlの取得
-urls = driver.find_elements_by_css_selector('div.NJo7tc.Z26q7c.uUuwM.jGGQ5e > div > a')
-if urls:
-    for url in urls:
-        items['url'].append(url.get_attribute('href').strip())
+    # seleniumによる検索結果のurlの取得
+    urls = driver.find_elements_by_css_selector('div.NJo7tc.Z26q7c.uUuwM.jGGQ5e > div > a')
+    if urls:
+        for url in urls:
+            items['url'].append(url.get_attribute('href').strip())
 
-# seleniumによるtitleの取得
-titles = driver.find_elements_by_css_selector('div.NJo7tc.Z26q7c.uUuwM.jGGQ5e > div > a > h3')
-if titles:
-    for title in titles:
-        items['title'].append(title.text.strip())
+    # seleniumによるtitleの取得
+    titles = driver.find_elements_by_css_selector('div.NJo7tc.Z26q7c.uUuwM.jGGQ5e > div > a > h3')
+    if titles:
+        for title in titles:
+            items['title'].append(title.text.strip())
 
-# seleniumによるdescription（説明文）の取得
-descriptions = driver.find_elements_by_css_selector('div > div:nth-child(2) > div > span')
-if descriptions:
-    for description in descriptions:
-        items['description'].append(description.text.strip())
+    # seleniumによるdescription（説明文）の取得
+    descriptions = driver.find_elements_by_css_selector('div > div:nth-child(2) > div > span')
+    if descriptions:
+        for description in descriptions:
+            items['description'].append(description.text.strip())
 
-# h1?h5見出しの取得
+    # h1?h5見出しの取得
+    for url in items['url']:
+        try:
+        # URLにGETリクエストを送る
+        response = requests.get(url)  # GETリクエスト
+        soup = BeautifulSoup(response.text, 'html.parser')  # HTMLから情報を取り出す為にBeautifulSoupオブジェクトを得る
+        time.sleep(1)  # 1秒待機
 
-# URLにGETリクエストを送る
+        except requests.exceptions.SSLError:  # SSlエラーが起こった時の処理を記入
+            response = requests.get(url, verity=False)
+            soup = BeautifulSoup(response.text, 'html.parser')
+            time.sleep(1)  # 1秒待機
 
-# GETリクエスト
+        # h1
+        # h1タグを全てリストとして取得
+        h1s = soup.find_all('h1')
 
-# HTMLから情報を取り出す為にBeautifulSoupオブジェクトを得る
+        # h1タグからテキストを取得してリストに入れる
+        h1_list = []
+        for h1 in h1s:
+            if h1.get_text():
+                h1_list.append(h1.get_text())
+        items["h1"].append(h1_list)
+        
+        # h2
+        # h2タグを全てリストとして取得
+        h2s = soup.find_all('h2')
+        
+        # h2タグからテキストを取得してリストに入れる
+        h2_list = []
+        for h2 in h2s:
+            if h2.get_text():
+                h2_list.append(h2.get_text())
+        items['h2'].append(h2_list)
 
-# 1秒待機
+        # h3
+        # h3タグを全てリストとして取得
+        h3s = soup.find_all('h3')
+        
+        # h3タグからテキストを取得してリストに入れる
+        h3_list = []
+        for h3 in h3s:
+            if h3.get_text():
+                h3_list.append(h3.get_text())
+        items['h3'].append(h3_list)
 
-# SSlエラーが起こった時の処理を記入
+        # h4
+        # h4タグを全てリストとして取得
+        h4s = soup.find_all('h4')
+        
+        # h4タグからテキストを取得してリストに入れる
+        h4_list = []
+        for h4 in h4s:
+            if h4.get_text():
+                h4_list.append(h4.get_text())
+        items['h4'].append(h4_list)
 
-# 1秒待機
-
-# h1
-# h1タグを全てリストとして取得
-
-# h1タグからテキストを取得してリストに入れる
-
-# h2
-# h2タグを全てリストとして取得
-
-# h2タグからテキストを取得してリストに入れる
-
-
-# h3
-
-
-# h4
-
-
-# h5
+        # h5
+        # h5タグを全てリストとして取得
+        h5s = soup.find_all('h5')
+        
+        # h5タグからテキストを取得してリストに入れる
+        h5_list = []
+        for h5 in h5s:
+            if h5.get_text():
+                h5_list.append(h5.get_text())
+        items['h5'].append(h5_list)
+    return items
 
 
 
