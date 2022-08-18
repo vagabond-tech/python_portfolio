@@ -1,4 +1,6 @@
 # ブラウザを自動操作するためseleniumをimport
+from time import time
+from numpy import column_stack
 from selenium import webdriver
 # seleniumでヘッドレスモードを指定するためにimport
 from selenium.webdriver.chrome.options import Options
@@ -183,76 +185,155 @@ def get_info(keyword, driver):
     return items
 
 
+def spred_out(items):
+    '''
+    Googleスプレッドシートに情報を出力
+    '''
 
-'''
-Googleスプレッドシートに情報を出力
-'''
+    # 制限
+    # ①ユーザーごとに100秒あたり100件のリクエスト
+    # ②1秒あたり10件まで
 
-# 制限
-# ①ユーザーごとに100秒あたり100件のリクエスト
-# ②1秒あたり10件まで
+    # OAuth2の資格情報を使用してGoogleAPIにログイン
+    gc = gspread.authorize(credentials)
 
-# OAuth2の資格情報を使用してGoogleAPIにログイン
-gc = gspread.authorize(credentials)
+    # シートが作成されているか確認するためのフラグ
+    flag = False
 
-# シートが作成されているか確認するためのフラグ
-flag = False
-# 共有設定したスプレッドシートのシート1を開く
-workbook = gc.open_by_key(SPREADSHEET_KEY)
+    try:
+        # 共有設定したスプレッドシートのシート1を開く
+        workbook = gc.open_by_key(SPREADSHEET_KEY)
 
-# ワークシートを作成（タイトルがkeywordで、50行、50列）
-worksheet = Workbook.add_worksheet(title=items['keyword'], rows='50', cols='50')
+        # ワークシートを作成（タイトルがkeywordで、50行、50列）
+        worksheet = Workbook.add_worksheet(title=items['keyword'], rows='50', cols='50')
 
-# シートが作成されたらフラグを立てる
-flag = True
-# スプレッドシート書き込み処理
+        # シートが作成されたらフラグを立てる
+        flag = True
+        # スプレッドシート書き込み処理
 
-# キーワードの書き込み
+        # キーワードの書き込み
+        worksheet.update_sell(1, 1, "検索キーワード")
+        worksheet.update_sell(1, 2, items['keyword'])
 
-# 1秒待機
+        # 1秒待機
+        time.sleep(1)
 
-# 順位の書き込み
+        # 順位の書き込み
+        column = 2
+        worksheet.update_sell(2, 1, '順位')
+        for ranking in range(1, 11):
+            worksheet.update_cell(2, column, ranking)
+            column += 1
 
-# 3秒待機
+        # 3秒待機
+        time.sleep(3)
 
-# 「タイトル」の書き込み
+        # 「タイトル」の書き込み
+        column = 1
+        for title in items['title']:
+            worksheet.update_cell(3, column, title)
+            column += 1
 
-# 3秒待機
+        # 3秒待機
+        time.sleep(3)
 
-# 「URL」の書き込み
+        # 「URL」の書き込み
+        column = 2
+        worksheet.update_sell(4, 1, 'URL')
+        for url in items['url']:
+            worksheet.update_cell(4, column, url)
+            column += 1
 
-# 3秒待機
+        # 3秒待機
+        time.sleep(3)
 
-# 「ディスクリプション」の書き込み
+        # 「ディスクリプション」の書き込み
+        column = 1
+        for description in items['description']:
+            worksheet.update_cell(5, column, description)
+            column += 1
 
-# 3秒待機
+        # 3秒待機
+        time.sleep(3)
 
-# 「h1」の書き込み
+        # 「h1」の書き込み
+        worksheet.update_cell(6, 1, 'H1タグ')
+        column = 2
+        for h1_list in items['h1']:
+            if h1_list:
+                h1_str = '***'.join(h1_list)
+                worksheet.update_cell(6, column, h1_str)
+                column += 1
+            else:
+                worksheet.update_cell(6, column, 'なし')
+                column += 1
 
-# 3秒待機
+        # 3秒待機
+        time.sleep(3)
 
+        # 「h2」の書き込み
+        worksheet.update_cell(7, 1, 'H2タグ')
+        column = 2
+        for h2_list in items['h2']:
+            if h2_list:
+                h2_str = '***'.join(h2_list)
+                worksheet.update_cell(7, column, h2_str)
+                column += 1
+            else:
+                worksheet.update_cell(7, column, 'なし')
+                column += 1
 
-# 「h2」の書き込み
+        # 3秒待機
+        time.sleep(3)
 
-# 3秒待機
+        # 「h3」の書き込み
+        worksheet.update_cell(8, 1, 'H3タグ')
+        column = 2
+        for h3_list in items['h3']:
+            if h3_list:
+                h3_str = '***'.join(h3_list)
+                worksheet.update_cell(8, column, h3_str)
+                column += 1
+            else:
+                worksheet.update_cell(8, column, 'なし')
+                column += 1
 
+        # 3秒待機
+        time.sleep(3)
 
-# 「h3」の書き込み
+        # 「h4」の書き込み
+        worksheet.update_cell(9, 1, 'H4タグ')
+        column = 2
+        for h4_list in items['h4']:
+            if h4_list:
+                h4_str = '***'.join(h4_list)
+                worksheet.update_cell(9, column, h4_str)
+                column += 1
+            else:
+                worksheet.update_cell(9, column, 'なし')
+                column += 1
 
-# 3秒待機
+        # 3秒待機
+        time.sleep(3)
 
+        # 「h5」の書き込み
+        worksheet.update_cell(10, 1, 'H5タグ')
+        column = 2
+        for h5_list in items['h5']:
+            if h5_list:
+                h5_str = '***'.join(h5_list)
+                worksheet.update_cell(10, column, h5_str)
+                column += 1
+            else:
+                worksheet.update_cell(10, column, 'なし')
+                column += 1
 
-# 「h4」の書き込み
+        # 3秒待機
+        time.sleep(3)
 
-# 3秒待機
-
-
-# 「h5」の書き込み
-
-# 3秒待機
-
-
-# エラー処理
+    # エラー処理
+    except Exception as e:
+        print('エラー内容：', e)
 
 # グーグルスプレッドシートのAPIの制限に達した場合
 
